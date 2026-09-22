@@ -320,6 +320,11 @@
     <section id="projects" class="section scrollspy">
       <h3 class="page-title white-text teal">Projects</h3>
       <div class="container">
+        <div style="margin-bottom: 16px;">
+          <input id="project-search" type="text" placeholder="Search projects by keyword..."
+            oninput="searchProjects()"
+            style="width:100%; padding:10px 16px; border-radius:5px; border:1px solid #7986cb; background:#1e1e1e; color:#e0e0e0; font-size:15px; box-sizing:border-box; outline:none;" />
+        </div>
         <div id="filter-bar" style="margin-bottom: 28px; display: flex; flex-wrap: wrap; gap: 10px;">
           <button class="filter-btn active-filter" data-tag="all"    onclick="filterProjects('all')">All</button>
           <button class="filter-btn"               data-tag="React"  onclick="filterProjects('React')">React</button>
@@ -585,6 +590,39 @@
       } else {
         projectsData.filter(function(p) {
           return p.tags.indexOf(tag) !== -1;
+        }).forEach(function(p) {
+          container.innerHTML += renderProject(p);
+        });
+        loadMoreBtn.style.display = 'none';
+      }
+    }
+
+    function searchProjects() {
+      var query = document.getElementById('project-search').value.trim().toLowerCase();
+      var container = document.getElementById('projects-container');
+      var loadMoreBtn = document.getElementById('load-more-btn');
+
+      // Reset tag filter highlight to "All"
+      document.querySelectorAll('.filter-btn').forEach(function(btn) {
+        btn.classList.toggle('active-filter', btn.getAttribute('data-tag') === 'all');
+      });
+
+      container.innerHTML = '';
+
+      if (query === '') {
+        // Empty search — restore initial paginated state
+        projectsShown = 0;
+        var initial = Math.min(2, projectsData.length);
+        for (var i = 0; i < initial; i++) {
+          container.innerHTML += renderProject(projectsData[i]);
+        }
+        projectsShown = initial;
+        loadMoreBtn.style.display = projectsShown >= projectsData.length ? 'none' : 'inline-block';
+      } else {
+        // Show all projects whose title or description contains the query
+        projectsData.filter(function(p) {
+          return p.title.toLowerCase().indexOf(query) !== -1
+              || p.description.toLowerCase().indexOf(query) !== -1;
         }).forEach(function(p) {
           container.innerHTML += renderProject(p);
         });
