@@ -320,104 +320,12 @@
     <section id="projects" class="section scrollspy">
       <h3 class="page-title white-text teal">Projects</h3>
       <div class="container">
-        <div class="row">
-
-          <!-- Personal Website -->
-          <div class="col s12 m6 l4">
-            <div class="card medium">
-              <div class="card-image waves-effect waves-block waves-light">
-                <img alt="Personal website screenshot" src="/assets/img/project-blog-logo.jpg" style="height: 100%; width: 100%" class="activator" />
-              </div>
-              <div class="card-content">
-                <span class="card-title activator teal-text hoverline">Personal Website<i
-                    class="mdi-navigation-more-vert right"></i></span>
-                <p>
-                  A React-based blog and portfolio site with CI/CD, CMS, and OpenAI integration.
-                </p>
-              </div>
-              <div class="card-reveal">
-                <span class="card-title grey-text"><small>Highlights</small><i
-                    class="mdi-navigation-close right"></i></span>
-                <ul>
-                  <li><b>Tools:</b> React, AWS (Amplify, CodePipeline, CodeDeploy), Docker, Strapi, Python, PostgreSQL, OpenAI API</li>
-                  <li>Deployed via AWS CI/CD pipeline with automated build, test, and deploy stages.</li>
-                  <li>Configured Docker environment to run a Strapi CMS on EC2 for dynamic content management.</li>
-                  <li>Integrated OpenAI APIs for customized user experiences.</li>
-                </ul>
-                <div class="card-action">
-                  <a aria-label="Visit the GitHub repo" href="https://github.com/schen0801"
-                    target="_blank" data-position="top" data-tooltip="View Source"
-                    class="btn-floating btn-large waves-effect waves-light blue-grey tooltipped"><i
-                      class="fa fa-github"></i></a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Day Travel Map -->
-          <div class="col s12 m6 l4">
-            <div class="card medium">
-              <div class="card-image waves-effect waves-block waves-light">
-                <img alt="Day Travel Map GIS" src="/assets/img/project-ml-3.jpg" style="height: 100%; width: 100%" class="activator" />
-              </div>
-              <div class="card-content">
-                <span class="card-title activator teal-text hoverline">Day Travel Map (ECE297)<i
-                    class="mdi-navigation-more-vert right"></i></span>
-                <p>
-                  A responsive GIS application for city navigation with optimized pathfinding algorithms.
-                </p>
-              </div>
-              <div class="card-reveal">
-                <span class="card-title grey-text"><small>Highlights</small><i
-                    class="mdi-navigation-close right"></i></span>
-                <ul>
-                  <li><b>Tools:</b> C++, C++ STL, EZGL (GTK wrapper), OpenStreetMap</li>
-                  <li>Designed a user-friendly city mapping GIS for commuters.</li>
-                  <li>Implemented Dijkstra and A* pathfinding algorithms, improving efficiency by 50%.</li>
-                  <li>Rendered city components using the EZGL graphics library with OSM map data.</li>
-                </ul>
-                <div class="card-action">
-                  <a aria-label="Visit the GitHub repo" href="https://github.com/schen0801"
-                    target="_blank" data-position="top" data-tooltip="View Source"
-                    class="btn-floating btn-large waves-effect waves-light blue-grey tooltipped"><i
-                      class="fa fa-github"></i></a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Car Brand Classifier -->
-          <div class="col s12 m6 l4">
-            <div class="card medium">
-              <div class="card-image waves-effect waves-block waves-light">
-                <img alt="Deep Learning Car Classifier" src="/assets/img/Deep-learning-for-computer-vision2.png" style="height: 100%; width: 100%" class="activator" />
-              </div>
-              <div class="card-content">
-                <span class="card-title activator teal-text hoverline">Car Brand Classifier (APS360)<i
-                    class="mdi-navigation-more-vert right"></i></span>
-                <p>
-                  A CNN that classifies car brand images from surveillance-style data, achieving 82% test accuracy.
-                </p>
-              </div>
-              <div class="card-reveal">
-                <span class="card-title grey-text"><small>Highlights</small><i
-                    class="mdi-navigation-close right"></i></span>
-                <ul>
-                  <li><b>Tools:</b> Python, PyTorch</li>
-                  <li>Led development of a CNN to classify images across 5 car brands.</li>
-                  <li>Applied image augmentation techniques (Color Jitter, cropping, Gaussian noise) to improve generalization with a limited dataset.</li>
-                  <li>Achieved 82% test accuracy on augmented surveillance-style imagery.</li>
-                </ul>
-                <div class="card-action">
-                  <a aria-label="Visit the GitHub repo" href="https://github.com/schen0801"
-                    target="_blank" data-position="top" data-tooltip="View Source"
-                    class="btn-floating btn-large waves-effect waves-light blue-grey tooltipped"><i
-                      class="fa fa-github"></i></a>
-                </div>
-              </div>
-            </div>
-          </div>
-
+        <div id="projects-container" class="row"></div>
+        <div class="center-align" style="margin-bottom: 40px;">
+          <button id="load-more-btn" onclick="loadMoreProjects()"
+            style="background-color:#1a237e; color:#fff; border:none; padding:12px 32px; font-size:15px; font-weight:600; letter-spacing:1px; border-radius:5px; cursor:pointer;">
+            Load More
+          </button>
         </div>
       </div>
     </section>
@@ -537,6 +445,114 @@
     });
   </script>
 
+
+  <!-- Projects: data + dynamic rendering -->
+  <script>
+    var projectsData = [
+      {
+        title: "Personal Website",
+        description: "A React-based blog and portfolio site with CI/CD pipeline, headless CMS, and OpenAI integration.",
+        image: "/assets/img/project-blog-logo.jpg",
+        tools: "React, AWS (Amplify, CodePipeline, CodeDeploy), Docker, Strapi, Python, PostgreSQL, OpenAI API",
+        highlights: [
+          "Deployed via AWS CI/CD pipeline with automated build, test, and deploy stages.",
+          "Configured Docker environment to run a Strapi CMS on EC2 for dynamic content management.",
+          "Integrated OpenAI APIs for customized user experiences and stored user inputs in a database."
+        ],
+        github: "https://github.com/schen0801",
+        live: null
+      },
+      {
+        title: "Day Travel Map (ECE297)",
+        description: "A responsive GIS application for city navigation with optimized pathfinding algorithms.",
+        image: "/assets/img/project-ml-3.jpg",
+        tools: "C++, C++ STL, EZGL (GTK wrapper), OpenStreetMap",
+        highlights: [
+          "Designed a user-friendly city mapping GIS for commuters.",
+          "Implemented Dijkstra and A* pathfinding algorithms, improving efficiency by 50%.",
+          "Rendered city components using the EZGL graphics library with OSM map data."
+        ],
+        github: "https://github.com/schen0801",
+        live: null
+      },
+      {
+        title: "Car Brand Classifier (APS360)",
+        description: "A CNN that classifies car brand images from surveillance-style data, achieving 82% test accuracy.",
+        image: "/assets/img/Deep-learning-for-computer-vision2.png",
+        tools: "Python, PyTorch",
+        highlights: [
+          "Led development of a CNN to classify images across 5 car brands.",
+          "Applied augmentation techniques (Color Jitter, cropping, Gaussian noise) to improve generalization.",
+          "Achieved 82% test accuracy on augmented surveillance-style imagery."
+        ],
+        github: "https://github.com/schen0801",
+        live: null
+      },
+      {
+        title: "GPT-4 Research Chatbot",
+        description: "A full-stack AI-powered survey chatbot built during a UofT research internship with Prof. Jonathan Rose.",
+        image: "/assets/img/project-AI.jpg",
+        tools: "React, Python (Sanic), AWS API Gateway, ECS, GPT-4",
+        highlights: [
+          "Maintained a GPT-4-powered chatbot with a React survey frontend and Python backend.",
+          "Reduced operational costs by 30% through advanced prompt structuring techniques.",
+          "Co-developed a data generation pipeline capable of producing 40,000 domain-specific sentences."
+        ],
+        github: "https://github.com/schen0801",
+        live: null
+      }
+    ];
+
+    var projectsShown = 0;
+    var projectsPerLoad = 2;
+
+    function renderProject(project) {
+      var liveBtn = project.live
+        ? '<a href="' + project.live + '" target="_blank" data-position="top" data-tooltip="View Online" class="btn-floating btn-large waves-effect waves-light blue-grey tooltipped"><i class="fa fa-external-link"></i></a>'
+        : '';
+      var highlights = project.highlights.map(function(h) {
+        return '<li>' + h + '</li>';
+      }).join('');
+
+      return '<div class="col s12 m6 l4">'
+        + '<div class="card medium">'
+          + '<div class="card-image waves-effect waves-block waves-light">'
+            + '<img alt="' + project.title + '" src="' + project.image + '" style="height:100%;width:100%" class="activator" />'
+          + '</div>'
+          + '<div class="card-content">'
+            + '<span class="card-title activator teal-text hoverline">' + project.title + '<i class="mdi-navigation-more-vert right"></i></span>'
+            + '<p>' + project.description + '</p>'
+          + '</div>'
+          + '<div class="card-reveal">'
+            + '<span class="card-title grey-text"><small>Highlights</small><i class="mdi-navigation-close right"></i></span>'
+            + '<ul>'
+              + '<li><b>Tools:</b> ' + project.tools + '</li>'
+              + highlights
+            + '</ul>'
+            + '<div class="card-action">'
+              + liveBtn
+              + '<a href="' + project.github + '" target="_blank" data-position="top" data-tooltip="View Source" class="btn-floating btn-large waves-effect waves-light blue-grey tooltipped"><i class="fa fa-github"></i></a>'
+            + '</div>'
+          + '</div>'
+        + '</div>'
+      + '</div>';
+    }
+
+    function loadMoreProjects() {
+      var container = document.getElementById('projects-container');
+      var end = Math.min(projectsShown + projectsPerLoad, projectsData.length);
+      for (var i = projectsShown; i < end; i++) {
+        container.innerHTML += renderProject(projectsData[i]);
+      }
+      projectsShown = end;
+      if (projectsShown >= projectsData.length) {
+        var btn = document.getElementById('load-more-btn');
+        btn.style.display = 'none';
+      }
+    }
+
+    loadMoreProjects();
+  </script>
 
   <!-- jQuery-->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
