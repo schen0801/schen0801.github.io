@@ -540,7 +540,7 @@
 
     function loadMoreProjects() {
       var container = document.getElementById('projects-container');
-      var end = Math.min(projectsShown + projectsPerLoad, projectsData.length);
+      var end = projectsData.length;
       for (var i = projectsShown; i < end; i++) {
         container.innerHTML += renderProject(projectsData[i]);
       }
