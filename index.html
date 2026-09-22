@@ -320,6 +320,15 @@
     <section id="projects" class="section scrollspy">
       <h3 class="page-title white-text teal">Projects</h3>
       <div class="container">
+        <div id="filter-bar" style="margin-bottom: 28px; display: flex; flex-wrap: wrap; gap: 10px;">
+          <button class="filter-btn active-filter" data-tag="all"    onclick="filterProjects('all')">All</button>
+          <button class="filter-btn"               data-tag="React"  onclick="filterProjects('React')">React</button>
+          <button class="filter-btn"               data-tag="Python" onclick="filterProjects('Python')">Python</button>
+          <button class="filter-btn"               data-tag="AWS"    onclick="filterProjects('AWS')">AWS</button>
+          <button class="filter-btn"               data-tag="Docker" onclick="filterProjects('Docker')">Docker</button>
+          <button class="filter-btn"               data-tag="C++"    onclick="filterProjects('C++')">C++</button>
+          <button class="filter-btn"               data-tag="PyTorch" onclick="filterProjects('PyTorch')">PyTorch</button>
+        </div>
         <div id="projects-container" class="row"></div>
         <div class="center-align" style="margin-bottom: 40px;">
           <button id="load-more-btn" onclick="loadMoreProjects()"
@@ -446,7 +455,7 @@
   </script>
 
 
-  <!-- Projects: data + dynamic rendering -->
+  <!-- Projects: data + dynamic rendering + tag filtering -->
   <script>
     var projectsData = [
       {
@@ -459,6 +468,7 @@
           "Configured Docker environment to run a Strapi CMS on EC2 for dynamic content management.",
           "Integrated OpenAI APIs for customized user experiences and stored user inputs in a database."
         ],
+        tags: ["React", "Python", "AWS", "Docker"],
         github: "https://github.com/schen0801",
         live: null
       },
@@ -472,6 +482,7 @@
           "Implemented Dijkstra and A* pathfinding algorithms, improving efficiency by 50%.",
           "Rendered city components using the EZGL graphics library with OSM map data."
         ],
+        tags: ["C++"],
         github: "https://github.com/schen0801",
         live: null
       },
@@ -485,6 +496,7 @@
           "Applied augmentation techniques (Color Jitter, cropping, Gaussian noise) to improve generalization.",
           "Achieved 82% test accuracy on augmented surveillance-style imagery."
         ],
+        tags: ["Python", "PyTorch"],
         github: "https://github.com/schen0801",
         live: null
       },
@@ -498,13 +510,13 @@
           "Reduced operational costs by 30% through advanced prompt structuring techniques.",
           "Co-developed a data generation pipeline capable of producing 40,000 domain-specific sentences."
         ],
+        tags: ["React", "Python", "AWS"],
         github: "https://github.com/schen0801",
         live: null
       }
     ];
 
     var projectsShown = 0;
-    var projectsPerLoad = 2;
 
     function renderProject(project) {
       var liveBtn = project.live
@@ -512,6 +524,9 @@
         : '';
       var highlights = project.highlights.map(function(h) {
         return '<li>' + h + '</li>';
+      }).join('');
+      var tagPills = project.tags.map(function(t) {
+        return '<span style="display:inline-block;margin:4px 4px 0 0;padding:2px 10px;border-radius:12px;font-size:12px;background:#1a237e;color:#c5cae9;">' + t + '</span>';
       }).join('');
 
       return '<div class="col s12 m6 l4">'
@@ -522,6 +537,7 @@
           + '<div class="card-content">'
             + '<span class="card-title activator teal-text hoverline">' + project.title + '<i class="mdi-navigation-more-vert right"></i></span>'
             + '<p>' + project.description + '</p>'
+            + '<div style="margin-top:8px;">' + tagPills + '</div>'
           + '</div>'
           + '<div class="card-reveal">'
             + '<span class="card-title grey-text"><small>Highlights</small><i class="mdi-navigation-close right"></i></span>'
@@ -540,18 +556,53 @@
 
     function loadMoreProjects() {
       var container = document.getElementById('projects-container');
-      var end = projectsData.length;
-      for (var i = projectsShown; i < end; i++) {
+      var loadMoreBtn = document.getElementById('load-more-btn');
+      for (var i = projectsShown; i < projectsData.length; i++) {
         container.innerHTML += renderProject(projectsData[i]);
       }
-      projectsShown = end;
-      if (projectsShown >= projectsData.length) {
-        var btn = document.getElementById('load-more-btn');
-        btn.style.display = 'none';
+      projectsShown = projectsData.length;
+      loadMoreBtn.style.display = 'none';
+    }
+
+    function filterProjects(tag) {
+      var container = document.getElementById('projects-container');
+      var loadMoreBtn = document.getElementById('load-more-btn');
+
+      document.querySelectorAll('.filter-btn').forEach(function(btn) {
+        btn.classList.toggle('active-filter', btn.getAttribute('data-tag') === tag);
+      });
+
+      container.innerHTML = '';
+
+      if (tag === 'all') {
+        projectsShown = 0;
+        var initial = Math.min(2, projectsData.length);
+        for (var i = 0; i < initial; i++) {
+          container.innerHTML += renderProject(projectsData[i]);
+        }
+        projectsShown = initial;
+        loadMoreBtn.style.display = projectsShown >= projectsData.length ? 'none' : 'inline-block';
+      } else {
+        projectsData.filter(function(p) {
+          return p.tags.indexOf(tag) !== -1;
+        }).forEach(function(p) {
+          container.innerHTML += renderProject(p);
+        });
+        loadMoreBtn.style.display = 'none';
       }
     }
 
-    loadMoreProjects();
+    // Initial render: first 2 projects, Load More reveals the rest
+    (function() {
+      var container = document.getElementById('projects-container');
+      var loadMoreBtn = document.getElementById('load-more-btn');
+      var initial = Math.min(2, projectsData.length);
+      for (var i = 0; i < initial; i++) {
+        container.innerHTML += renderProject(projectsData[i]);
+      }
+      projectsShown = initial;
+      if (projectsShown >= projectsData.length) loadMoreBtn.style.display = 'none';
+    })();
   </script>
 
   <!-- jQuery-->
